@@ -13,7 +13,7 @@ function checksExistsUserAccount(request, response, next) {
   const { username } = request.headers;
 
   const user = users.find((user) => user.username === username);
-  console.log(user);
+
   if (!user) {
     return response.status(400).json({
       error: "User already exists!",
