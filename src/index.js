@@ -15,8 +15,8 @@ function checksExistsUserAccount(request, response, next) {
   const user = users.find((user) => user.username === username);
 
   if (!user) {
-    return response.status(400).json({
-      error: "User already exists!",
+    return response.status(404).json({
+      error: "User not found!",
     });
   }
 
@@ -38,7 +38,41 @@ function checksCreateTodosUserAvailability(request, response, next) {
 }
 
 function checksTodoExists(request, response, next) {
-  // Complete aqui
+  const { username } = request.headers;
+  const { id } = request.params;
+
+  let regex = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+  let validUUID = id;
+
+  const user = users.find((user) => user.username === username);
+
+  if (!user) {
+    return response.status(404).json({
+      error: "User not found!",
+    });
+  }
+
+  const todos = user.todos;
+  validUUID = validUUID.match(regex);
+
+  if (!validUUID) {
+    return response.status(400).json({
+      error: "Invalid ID",
+    });
+  }
+
+  const todo = todos.find((todo) => todo.id === id);
+
+  if (!todo) {
+    return response.status(404).json({
+      error: "ToDo not found!",
+    });
+  }
+
+  request.user = user;
+  request.todo = todo;
+
+  return next();
 }
 
 function findUserById(request, response, next) {
