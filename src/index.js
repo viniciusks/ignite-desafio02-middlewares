@@ -32,7 +32,7 @@ function checksCreateTodosUserAvailability(request, response, next) {
     return next();
   }
 
-  return response.status(400).json({
+  return response.status(403).json({
     error: "User plan is free and 10 ToDos",
   });
 }
